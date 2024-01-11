@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<test-results name="C:\Users\JaccoUijlenhoet\Documents\delphi_libraries\rqliteclient\test\Win32\Debug\rqlitetest.exe" total="1" errors="1" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2024-01-11" time="4.928">
+  <culture-info current-culture="en" current-uiculture="en" />
+  <test-suite type="Assembly" name="rqlitetest.exe" executed="true" result="Failure" success="False" time="4.928" asserts="0">
+    <results>
+        <test-suite type="Namespace" name="utest" executed="true" result="Success" success="True" time="4.927" asserts="0" >
+          <results>
+              <test-suite type="Fixture" name="TRQLiteTest" executed="True" result="Success" success="True" time="4.927" >
+                <results>
+                  <test-case name="TestSelectAll" executed="True" result="Error" success="False" time="0.000" asserts="0" >
+                    <failure>
+                      <message>
+                        <![CDATA[ Socket Error # 10061
+Connection refused. ]]>
+                      </message>
+                      <stack-trace>
+                        <![CDATA[  ]]>
+                      </stack-trace>
+                    </failure>
+                  </test-case>
+                </results>
+              </test-suite>
+          </results>
+        </test-suite>
+    </results>
+  </test-suite>
+</test-results>
