@@ -43,8 +43,11 @@ type
   end;
 
 function HexValue(ByteData: TBytes): String;
+function Base64ToBytes(ABase64String: string): TBytes;
 
 implementation
+
+uses IdCoder, IdCoderMIME;
 
 type
   TRqliteClient = class(TInterfacedObject, IRqliteClient)
@@ -100,8 +103,13 @@ begin
   begin
     SetLength(Result, BinLen * 2);
     BinToHex(PAnsiChar(Ansi), PChar(Result), BinLen);
-    Result := 'X''' + result+'''';//AnsiQuotedStr(Result, #39);
+    Result := 'X''' + Result + '''';
   end;
+end;
+
+function Base64ToBytes(ABase64String: string): TBytes;
+begin
+  Result := TBytes(TIdDecoderMIME.DecodeBytes(ABase64String));
 end;
 
 { TRqliteClient }
@@ -118,20 +126,20 @@ function TRqliteClient.CreateJSONArray(AStrings: TStrings): TJSONArray;
 var
   i: integer;
   LStr: string;
-  LTempObject: TJSONObject;
   vi: integer;
   vf: double;
+  vb: boolean;
 begin
   i := 0;
   Result := TJSONArray.Create;
   for LStr in AStrings do
   begin
-    // LTempObject := TJSONObject.Create;
-    // LTempObject.A[i] := TJSONValue.ParseJSONValue(LStr);
     if TryStrToInt(LStr, vi) then
       Result.Add(vi)
     else if TryStrToFloat(LStr, vf) then
       Result.Add(vf)
+    else if TryStrToBool(LStr, vb) then
+      Result.Add(vb)
     else
       Result.Add(LStr);
     Inc(i);

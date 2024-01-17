@@ -113,6 +113,10 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <DCC_UsePackage>FireDACIBDriver;FMXTMSFNCCorePkg;VCLTMSFNCMapsPkg;FMX_TMSFNCGridExcelBridge;DragDropDR11A;vclwinx;FMXTMSFNCUIPackPkg;dacvcl280;TMSLogging;fmx;G115FR270;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;FireDACCommonODBC;aurelius;sparkle;FireDACCommonDriver;sphinx;appanalytics;IndyProtocols;vclx;Skia.Package.RTL;IndyIPClient;dbxcds;vcledge;dac280;VCLTMSFNCGanttChartPkg;bindcompvclwinx;FmxTeeUI;Hydra_Core_D28;FMXTMSFNCCloudPackPkg;FMX_FlexCel_Components;FlexCel_Pdf;bindcompfmx;StyleControls_d11Alexandria;inetdb;FireDACSqliteDriver;DbxClientDriver;Tee;soapmidas;vclactnband;TeeUI;fmxFireDAC;dbexpress;DBXMySQLDriver;VclSmp;inet;dacfmx280;pgdacfmx280;sbridge280;vcltouch;fmxase;pgdacvcl280;dbrtl;FMX_FlexCel_Core;Skia.Package.FMX;fmxdae;TeeDB;FlexCel_XlsAdapter;FireDACMSAccDriver;tmsbcl;CustomIPTransport;ZCore;Hydra_FMX_D28;VCL_FlexCel_Core;ZParseSql;VCLTMSFNCCloudPackPkg;vcldsnap;DBXInterBaseDriver;FMXTMSFNCGanttChartPkg;IndySystem;VCL_TMSFNCGridExcelBridge;Skia.Package.VCL;vcldb;VirtualTreesR;VCLTMSFNCChartPkg;FlexCel_Core;vclFireDAC;bindcomp;FireDACCommon;FlexCel_Render;G115Common_R270;IndyCore;RESTBackendComponents;ZPlain;ZComponent;bindcompdbx;rtl;FireDACMySQLDriver;FireDACADSDriver;VCL_FlexCel_Components;G115_R270;RESTComponents;remotedb;DBXSqliteDriver;vcl;IndyIPServer;dsnapxml;dsnapcon;adortl;FMXTMSFNCChartPkg;dacsbridge280;vclimg;FireDACPgDriver;FireDAC;inetdbxpress;xmlrtl;tethering;VCLTMSFNCUIPackPkg;ZDbc;crcontrols280;bindcompvcl;dsnap;xdata;Hydra_VCL_D28;CloudService;VCLTMSFNCCorePkg;fmxobj;bindcompvclsmp;FMXTee;FMXTMSFNCMapsPkg;GLScene_RT;soaprtl;soapserver;pgdac280;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
+        <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
@@ -126,6 +130,10 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
+        <DCC_Define>TESTINSIGHT;$(DCC_Define)</DCC_Define>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -137,7 +145,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="utest.rqlite.pas"/>
+        <DCCReference Include="utest.rqlite.integration.pas"/>
         <DCCReference Include="..\src\urqlite.client.pas"/>
         <DCCReference Include="..\src\urqlite.net.pas"/>
         <BuildConfiguration Include="Base">
@@ -160,6 +168,12 @@
                 <Source>
                     <Source Name="MainSource">rqlitetest.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\VCLTMSFNCBloxToolBarsPkgDXE14.bpl">TMS FNC Blox Toolbars for VCL</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\FMXTMSFNCBloxToolBarsPkgDXE14.bpl">TMS FNC Blox Toolbars for FMX</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">

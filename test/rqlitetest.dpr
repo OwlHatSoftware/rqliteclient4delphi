@@ -7,14 +7,13 @@ program rqlitetest;
 
 uses
   System.SysUtils,
-{$IFDEF TESTINSIGHT}
+  {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
-{$ELSE}
+  {$ELSE}
   DUnitX.Loggers.Console,
-  DUnitX.Loggers.Xml.NUnit,
-{$ENDIF }
+  {$ENDIF }
   DUnitX.TestFramework,
-  utest.rqlite in 'utest.rqlite.pas',
+  utest.rqlite.integration in 'utest.rqlite.integration.pas',
   urqlite.client in '..\src\urqlite.client.pas',
   urqlite.net in '..\src\urqlite.net.pas';
 
