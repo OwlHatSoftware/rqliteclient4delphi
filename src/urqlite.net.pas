@@ -1,4 +1,14 @@
 unit urqlite.net;
+// ****************************************************************************
+// This unit contains the networking part of the RQLiteClient4Delphi
+// The HttpClientFactory class contains the avalable networking libraries you
+// can use, currently available:
+// - Indy
+// -.....
+// ****************************************************************************
+// Created by: Jacco Uijlenhoet
+// License: GNU General Public License v2.0
+// ****************************************************************************
 
 interface
 
@@ -12,8 +22,8 @@ type
     function Post(const URI: string; const AData: TStream): string;
   end;
 
-  TNetHttpClientFactory = class
-    class function CreateInstance: IHttpClient;
+  THttpClientFactory = class
+    class function CreateIndyInstance: IHttpClient;
   end;
 
 implementation
@@ -24,7 +34,7 @@ uses
   IdURI;
 
 type
-  TNetHttpClient = class(TInterfacedObject, IHttpClient)
+  TIndyHttpClient = class(TInterfacedObject, IHttpClient)
   private
     FHTTPClient: TIdHTTP;
     function Get(const URI: string): string;
@@ -34,21 +44,21 @@ type
     destructor Destroy; override;
   end;
 
-  { TNetHttpClient }
+  { TIndyHttpClient }
 
-constructor TNetHttpClient.Create;
+constructor TIndyHttpClient.Create;
 begin
   FHTTPClient := TIdHTTP.Create;
   FHTTPClient.Request.CustomHeaders.Values['Content-Type'] := 'application/json';
 end;
 
-destructor TNetHttpClient.Destroy;
+destructor TIndyHttpClient.Destroy;
 begin
   FHTTPClient.Free;
   inherited;
 end;
 
-function TNetHttpClient.Get(const URI: string): string;
+function TIndyHttpClient.Get(const URI: string): string;
 var
   response: string;
 begin
@@ -56,12 +66,10 @@ begin
   response := FHTTPClient.Get(TIdURI.UrlEncode(URI));
   if response = '' then
     raise Exception.Create('No HTTP response!');
-//  if response.StatusCode >= 400 then
-//    raise Exception.Create(Format('Http Error: %d, %s', [response.StatusCode, response.StatusText]));
-  result := response;//.ContentAsString(TEncoding.UTF8);
+  result := response;
 end;
 
-function TNetHttpClient.Post(const URI: string; const AData: TStream): string;
+function TIndyHttpClient.Post(const URI: string; const AData: TStream): string;
 var
   response: string;
 begin
@@ -69,16 +77,14 @@ begin
   response := FHTTPClient.Post(TIdURI.UrlEncode(URI), AData);
   if response = '' then
     raise Exception.Create('No HTTP response!');
-//  if response.StatusCode >= 400 then
-//    raise Exception.Create(Format('Http Error: %d, %s', [response.StatusCode, response.StatusText]));
-  result := response;//.ContentAsString(TEncoding.UTF8);
+  result := response;
 end;
 
-{ TNetHttpClientFactory }
+{ THttpClientFactory }
 
-class function TNetHttpClientFactory.CreateInstance: IHttpClient;
+class function THttpClientFactory.CreateIndyInstance: IHttpClient;
 begin
-  result := TNetHttpClient.Create;
+  result := TIndyHttpClient.Create;
 end;
 
 end.

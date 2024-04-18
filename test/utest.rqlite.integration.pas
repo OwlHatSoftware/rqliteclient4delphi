@@ -11,7 +11,6 @@ type
 
   // IntegrationTest for Rqlite4delphi client
   // You have to start an rqlite cluster before executing this test!!
-  //
 
   [TestFixture]
   TRQLiteTest = class
@@ -19,13 +18,12 @@ type
     rqliteClient: IRqliteClient;
     procedure DropAndCreateTable;
     function ConvertFileToHex(AFileName: string): string;
-    procedure SelectFromDB;
+    procedure SelectFromDB(ATableName: string);
   public
     [Setup]
     procedure Setup;
     [TearDown]
     procedure TearDown;
-    // Sample Methods
     // Simple single Test
     [Test]
     procedure TestDropAndCreateTable;
@@ -35,11 +33,6 @@ type
     procedure TestGetColumnTypes;
     [Test]
     procedure TestGetValues;
-    // Test with TestCase Attribute to supply parameters.
-    // [Test]
-    // [TestCase('TestA', '1,2')]
-    // [TestCase('TestB', '3,4')]
-    // procedure Test2(const AValue1: Integer; const AValue2: Integer);
   end;
 
 implementation
@@ -79,7 +72,7 @@ const
 
 function TRQLiteTest.ConvertFileToHex(AFileName: string): string;
 begin
-  result := HexValue(TFile.ReadAllBytes(AFileName));
+  result := BytesToHexString(TFile.ReadAllBytes(AFileName));
 end;
 
 procedure DecodeFile(const base64: AnsiString; const FileName: string);
@@ -112,7 +105,7 @@ begin
       ('CREATE TABLE employees (%s %s NOT NULL PRIMARY KEY AUTOINCREMENT, %s %s, %s %s, %s %s, %s %s, %s %s, org_id INTEGER NOT NULL, FOREIGN KEY (org_id) REFERENCES organisation (id) )',
       [cfld_id, cfld_id_type, cfld_name, cfld_name_type, cfld_age, cfld_age_type, cfld_birthdate, cfld_birthdate_type,
       cfld_profile, cfld_profile_type, cfld_photo, cfld_photo_type]));
-    OldFormatsettings := Formatsettings;
+    OldFormatsettings := Formatsettings; // Temp store old formatsettings
     Formatsettings.DecimalSeparator := '.'; // set the decimal representation for float fields (NUMERIC/REAL in SQLite) to '.'
     // Add a record to organisation table
     Sql.Add(Format('INSERT INTO organisation(%s) VALUES("%s")', [c_ot_fld_name, 'Unilever']));
@@ -121,26 +114,26 @@ begin
     // Add a record to employee table
     Sql.Add(Format('INSERT INTO employees(%s, %s, %s, %s, %s, %s) VALUES("%s", %d, %f, %s, %s, %d)',
       [cfld_name, cfld_age, cfld_birthdate, cfld_profile, cfld_photo, cfld_org, 'Fiona', 20, EncodeDate(2004, 10, 15),
-      HexValue(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('ju-zw_w-aangepast.jpg'), 1]));
+      BytesToHexString(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('ju-zw_w-aangepast.jpg'), 1]));
     // Add a second record to employee table
     Sql.Add(Format('INSERT INTO employees(%s, %s, %s, %s, %s, %s) VALUES("%s", %d, %f, %s, %s, %d)',
       [cfld_name, cfld_age, cfld_birthdate, cfld_profile, cfld_photo, cfld_org, 'Peter', 50, EncodeDate(1974, 6, 2),
-      HexValue(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('ju-zw_w-aangepast.jpg'), 2]));
+      BytesToHexString(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('ju-zw_w-aangepast.jpg'), 2]));
     // Write it to the database as One transaction
     rqliteClient.Execute(Sql, True);
-    Formatsettings := OldFormatsettings; // Reset formatsettings
+    Formatsettings := OldFormatsettings; // Restore old formatsettings
   finally
     Sql.Free;
   end;
 end;
 
-procedure TRQLiteTest.SelectFromDB;
+procedure TRQLiteTest.SelectFromDB(ATableName: string);
 var
   Sql: TStringList;
 begin
   Sql := TStringList.Create;
   try
-    Sql.Add('SELECT * FROM employees');
+    Sql.Add(Format('SELECT * FROM %s',[ATableName]));
     rqliteClient.Query(Sql);
   finally
     Sql.Free;
@@ -148,9 +141,9 @@ begin
 end;
 
 procedure TRQLiteTest.Setup;
-
 begin
-  rqliteClient := TRqliteClientFactory.CreateInstance(TNetHttpClientFactory.CreateInstance);
+  // Create an instance of the Rqlite Client
+  rqliteClient := TRqliteClientFactory.CreateInstance(THttpClientFactory.CreateIndyInstance);
   rqliteClient.Hostname := 'localhost';
   rqliteClient.Port := 4005;
   rqliteClient.Database := 'employees';
@@ -164,10 +157,12 @@ end;
 procedure TRQLiteTest.TestDropAndCreateTable;
 begin
   DropAndCreateTable;
-  SelectFromDB;
-  Assert.AreNotEqual(0, rqliteClient.GetColumnNames.Count);
-  Assert.AreNotEqual(0, rqliteClient.GetColumnTypes.Count);
-  Assert.AreNotEqual(0, rqliteClient.GetColumnTypes.Count);
+  SelectFromDB('organisation');
+  Assert.AreEqual(2, rqliteClient.GetColumnNames.Count);
+  Assert.AreEqual(2, rqliteClient.GetColumnTypes.Count);
+  SelectFromDB('employees');
+  Assert.AreEqual(7, rqliteClient.GetColumnNames.Count);
+  Assert.AreEqual(7, rqliteClient.GetColumnTypes.Count);
 end;
 
 procedure TRQLiteTest.TestGetColumnNames;
@@ -175,9 +170,9 @@ var
   cn0, cn1, cn2, cn3, cn4: string;
 begin
   DropAndCreateTable;
-  SelectFromDB;
 
-  Assert.AreNotEqual(0, rqliteClient.GetColumnNames.Count);
+  SelectFromDB('employees');
+  Assert.AreEqual(7, rqliteClient.GetColumnNames.Count);
   cn0 := rqliteClient.GetColumnNames[0];
   Assert.AreEqual(cfld_id, cn0);
   cn1 := rqliteClient.GetColumnNames[1];
@@ -195,9 +190,8 @@ var
   ct0, ct1, ct2, ct3, ct4: string;
 begin
   DropAndCreateTable;
-  SelectFromDB;
-
-  Assert.AreNotEqual(0, rqliteClient.GetColumnTypes.Count);
+  SelectFromDB('employees');
+  Assert.AreEqual(7, rqliteClient.GetColumnTypes.Count);
   ct0 := rqliteClient.GetColumnTypes[0];
   Assert.AreEqual(cfld_id_type, ct0);
   ct1 := rqliteClient.GetColumnTypes[1];
@@ -228,9 +222,8 @@ var
   BlobVal: string;
 begin
   DropAndCreateTable;
-  SelectFromDB;
-
-  Assert.AreNotEqual(0, rqliteClient.GetRowCount);
+  SelectFromDB('employees');
+  Assert.AreEqual(2, rqliteClient.GetRowCount);
   rv00 := rqliteClient.GetRow(0).Value[0];
   Assert.AreEqual('1', rv00);
   rv01 := rqliteClient.GetRow(0).Value[1];
@@ -254,10 +247,6 @@ begin
   BlobVal := StringOf(Base64ToBytes(rv14));
   Assert.AreEqual(cStory, BlobVal);
 end;
-
-// procedure TRQLiteTest.Test2(const AValue1: Integer; const AValue2: Integer);
-// begin
-// end;
 
 initialization
 

@@ -42,7 +42,8 @@ type
     class function CreateInstance(const AHttpClient: IHttpClient): IRqliteClient;
   end;
 
-function HexValue(ByteData: TBytes): String;
+  // Conversion functions
+function BytesToHexString(ByteData: TBytes): String;
 function Base64ToBytes(ABase64String: string): TBytes;
 
 implementation
@@ -82,11 +83,13 @@ type
     property Database: string read GetDatabase write SetDatabase;
   end;
 
-function HexValue(ByteData: TBytes): String;
+function BytesToHexString(ByteData: TBytes): String;
 (*
   referenced source : heidisql
   unit : dbconnection
-  function : TDBQuery.HexValue(var ByteData: TBytes):
+  function : TDBQuery.HexValue(var ByteData: TBytes): String;
+  Purpose: Convert Byte data to a Hexidecimal string representation to
+  write raw Blob data.
 *)
 var
   BinLen: integer;
