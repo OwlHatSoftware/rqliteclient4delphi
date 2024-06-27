@@ -1,5 +1,12 @@
 unit utest.rqlite.integration;
 
+// ****************************************************************************
+// This unit contains the integration tests for rqliteClient4Delphi library
+// ****************************************************************************
+// Created by: OwlHatSoftware
+// License: GNU General Public License v3.0
+// ****************************************************************************
+
 interface
 
 uses
@@ -114,11 +121,11 @@ begin
     // Add a record to employee table
     Sql.Add(Format('INSERT INTO employees(%s, %s, %s, %s, %s, %s) VALUES("%s", %d, %f, %s, %s, %d)',
       [cfld_name, cfld_age, cfld_birthdate, cfld_profile, cfld_photo, cfld_org, 'Fiona', 20, EncodeDate(2004, 10, 15),
-      BytesToHexString(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('ju-zw_w-aangepast.jpg'), 1]));
+      BytesToHexString(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('RAD.png'), 1]));
     // Add a second record to employee table
     Sql.Add(Format('INSERT INTO employees(%s, %s, %s, %s, %s, %s) VALUES("%s", %d, %f, %s, %s, %d)',
       [cfld_name, cfld_age, cfld_birthdate, cfld_profile, cfld_photo, cfld_org, 'Peter', 50, EncodeDate(1974, 6, 2),
-      BytesToHexString(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('ju-zw_w-aangepast.jpg'), 2]));
+      BytesToHexString(TEncoding.UTF8.GetBytes(cStory)), ConvertFileToHex('RAD.png'), 2]));
     // Write it to the database as One transaction
     rqliteClient.Execute(Sql, True);
     Formatsettings := OldFormatsettings; // Restore old formatsettings
@@ -142,7 +149,7 @@ end;
 
 procedure TRQLiteTest.Setup;
 begin
-  // Create an instance of the Rqlite Client
+  // Create an instance of the Rqlite Client an setup basic parameters
   rqliteClient := TRqliteClientFactory.CreateInstance(THttpClientFactory.CreateIndyInstance);
   rqliteClient.Hostname := 'localhost';
   rqliteClient.Port := 4005;

@@ -6,8 +6,8 @@ unit urqlite.net;
 // - Indy
 // -.....
 // ****************************************************************************
-// Created by: Jacco Uijlenhoet
-// License: GNU General Public License v2.0
+// Created by: OwlHatSoftware
+// License: GNU General Public License v3.0
 // ****************************************************************************
 
 interface

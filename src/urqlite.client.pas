@@ -1,4 +1,11 @@
 unit urqlite.client;
+// ****************************************************************************
+// This unit contains the client class and interface of the rqliteClient4Delphi
+// The TRqliteClientFactory class is able to create an instance of the class
+// ****************************************************************************
+// Created by: OwlHatSoftware
+// License: GNU General Public License v3.0
+// ****************************************************************************
 
 interface
 
