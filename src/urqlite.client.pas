@@ -38,7 +38,8 @@ type
     function GetColumnTypes: TList<string>;
     function GetRowCount: integer;
     function GetRow(idx: integer): TRow;
-    function Execute(const QueryStr: TStringList; AsTransaction: boolean = false): boolean;
+    function Execute(const QueryStr: TStringList;
+      AsTransaction: boolean = false): boolean;
     function Query(const QueryStr: TStringList): boolean;
     property Hostname: string read GetHostname write SetHostname;
     property Port: integer read GetPort write SetPort;
@@ -46,7 +47,8 @@ type
   end;
 
   TRqliteClientFactory = class
-    class function CreateInstance(const AHttpClient: IHttpClient): IRqliteClient;
+    class function CreateInstance(const AHttpClient: IHttpClient)
+      : IRqliteClient;
   end;
 
   // Conversion functions
@@ -74,13 +76,15 @@ type
     function GetHostname: string;
     function GetPort: integer;
     function CreateJSONArray(AStrings: TStrings): TJSONArray;
-    function TryGetValueFromJSONArray<T>(const AName: string; JSONArr: TJSONArray; out Val: T): boolean;
+    function TryGetValueFromJSONArray<T>(const AName: string;
+      JSONArr: TJSONArray; out Val: T): boolean;
   public
     function GetColumnNames: TList<string>;
     function GetColumnTypes: TList<string>;
     function GetRowCount: integer;
     function GetRow(idx: integer): TRow;
-    function Execute(const QueryStr: TStringList; AsTransaction: boolean = false): boolean;
+    function Execute(const QueryStr: TStringList;
+      AsTransaction: boolean = false): boolean;
     function Query(const QueryStr: TStringList): boolean;
     constructor Create(const AHttpClient: IHttpClient);
     destructor Destroy; override;
@@ -164,13 +168,14 @@ begin
   inherited;
 end;
 
-function TRqliteClient.Execute(const QueryStr: TStringList; AsTransaction: boolean = false): boolean;
+function TRqliteClient.Execute(const QueryStr: TStringList;
+  AsTransaction: boolean = false): boolean;
 const
   cURI = 'http://%s:%d/db/execute?pretty&timings';
 var
   s, LURI: string;
   LJSONObject: TJSONObject;
-  LJSONArr: TJSONArray;
+  LJSONArr, LJSONArrResults: TJSONArray;
   LJSONError: TJSONValue;
   SS: TStringStream;
 begin
@@ -179,22 +184,27 @@ begin
   LURI := cURI;
   if AsTransaction then
     LURI := LURI + '&transaction';
+  LJSONArr := CreateJSONArray(QueryStr);
   try
-    s := CreateJSONArray(QueryStr).ToJSON;
-    SS := TStringStream.Create(s);
+    SS := TStringStream.Create(LJSONArr.ToJSON);
     try
-      LJSONObject := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(FHttpClient.Post(Format(LURI, [FHostname, FPort]),
-        SS)), 0) as TJSONObject;
-      Result := LJSONObject <> nil;
-      s := LJSONObject.ToJSON;
-      LJSONArr := LJSONObject.GetValue('results') as TJSONArray;
-      if TryGetValueFromJSONArray<string>('error', LJSONArr, s) then
-        raise Exception.Create(Format('Error: %s', [s]));
+      LJSONObject := TJSONObject.ParseJSONValue
+        (TEncoding.UTF8.GetBytes(FHttpClient.Post(Format(LURI,
+        [FHostname, FPort]), SS)), 0) as TJSONObject;
+      try
+        Result := LJSONObject <> nil;
+        s := LJSONObject.ToJSON;
+        LJSONArrResults := LJSONObject.GetValue('results') as TJSONArray;
+        if TryGetValueFromJSONArray<string>('error', LJSONArrResults, s) then
+          raise Exception.Create(Format('Error: %s', [s]));
+      finally
+        LJSONObject.Free;
+      end;
     finally
       SS.Free;
     end;
   finally
-    LJSONObject.Free;
+    LJSONArr.Free;
   end;
 end;
 
@@ -233,7 +243,8 @@ begin
   Result := FValues.Count;
 end;
 
-function TRqliteClient.TryGetValueFromJSONArray<T>(const AName: string; JSONArr: TJSONArray; out Val: T): boolean;
+function TRqliteClient.TryGetValueFromJSONArray<T>(const AName: string;
+  JSONArr: TJSONArray; out Val: T): boolean;
 var
   LArrElement, FoundVal: TJSONValue;
 begin
@@ -269,25 +280,29 @@ begin
   try
     s := '';
     LURI := Format(cURI, [FHostname, FPort, QueryStr.Text]);
-    LJSONObject := TJSONObject.ParseJSONValue(TEncoding.UTF8.GetBytes(FHttpClient.Get(LURI)), 0) as TJSONObject;
+    LJSONObject := TJSONObject.ParseJSONValue
+      (TEncoding.UTF8.GetBytes(FHttpClient.Get(LURI)), 0) as TJSONObject;
     Result := LJSONObject <> nil;
     LJSONArr := LJSONObject.GetValue('results') as TJSONArray;
     if TryGetValueFromJSONArray<string>('Error', LJSONArr, s) then
       raise Exception.Create(Format('Error: %s', [s]));
 
-    if TryGetValueFromJSONArray<TJSONArray>('columns', LJSONArr, LJSONColumnsArr) then
+    if TryGetValueFromJSONArray<TJSONArray>('columns', LJSONArr, LJSONColumnsArr)
+    then
     begin
       for LCol in LJSONColumnsArr do
         FColumns.Add(LCol.GetValue<string>);
     end;
 
-    if TryGetValueFromJSONArray<TJSONArray>('types', LJSONArr, LJSONTypesArr) then
+    if TryGetValueFromJSONArray<TJSONArray>('types', LJSONArr, LJSONTypesArr)
+    then
     begin
       for LType in LJSONTypesArr do
         FTypes.Add(LType.GetValue<string>);
     end;
 
-    if TryGetValueFromJSONArray<TJSONArray>('values', LJSONArr, LJSONValuesArr) then
+    if TryGetValueFromJSONArray<TJSONArray>('values', LJSONArr, LJSONValuesArr)
+    then
     begin
       for LVal in LJSONValuesArr do
       begin
@@ -324,7 +339,8 @@ end;
 
 { TRqliteClientFactory }
 
-class function TRqliteClientFactory.CreateInstance(const AHttpClient: IHttpClient): IRqliteClient;
+class function TRqliteClientFactory.CreateInstance(const AHttpClient
+  : IHttpClient): IRqliteClient;
 begin
   Result := TRqliteClient.Create(AHttpClient);
 end;

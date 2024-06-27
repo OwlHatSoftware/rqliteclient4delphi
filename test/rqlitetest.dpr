@@ -7,11 +7,11 @@ program rqlitetest;
 
 uses
   System.SysUtils,
-  {$IFDEF TESTINSIGHT}
+{$IFDEF TESTINSIGHT}
   TestInsight.DUnitX,
-  {$ELSE}
+{$ELSE}
   DUnitX.Loggers.Console,
-  {$ENDIF }
+{$ENDIF }
   DUnitX.TestFramework,
   utest.rqlite.integration in 'utest.rqlite.integration.pas',
   urqlite.client in '..\src\urqlite.client.pas',
@@ -28,10 +28,10 @@ var
 {$ENDIF}
 
 begin
+  ReportMemoryLeaksOnShutdown := True;
 {$IFDEF TESTINSIGHT}
   TestInsight.DUnitX.RunRegisteredTests;
 {$ELSE}
-  ReportMemoryLeaksOnShutdown := True;
   try
     // Check command line options, will exit if invalid
     TDUnitX.CheckCommandLine;
@@ -46,11 +46,13 @@ begin
     // Log to the console window if desired
     if TDUnitX.Options.ConsoleMode <> TDunitXConsoleMode.Off then
     begin
-      logger := TDUnitXConsoleLogger.Create(TDUnitX.Options.ConsoleMode = TDunitXConsoleMode.Quiet);
+      logger := TDUnitXConsoleLogger.Create
+        (TDUnitX.Options.ConsoleMode = TDunitXConsoleMode.Quiet);
       runner.AddLogger(logger);
     end;
     // Generate an NUnit compatible XML File
-    nunitLogger := TDUnitXXMLNUnitFileLogger.Create(TDUnitX.Options.XMLOutputFile);
+    nunitLogger := TDUnitXXMLNUnitFileLogger.Create
+      (TDUnitX.Options.XMLOutputFile);
     runner.AddLogger(nunitLogger);
 
     // Run tests
