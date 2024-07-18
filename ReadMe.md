@@ -80,6 +80,13 @@ And the *row/column values* like:
   rv20 := rqliteClient.GetRow(1).Value[0];
   rv21 := rqliteClient.GetRow(1).Value[1];
   ```
+### Changelog
+- [v0.3] Changed `TList<string>` to TStringlist
+	- Added RQLiteConnection Component
+	- Added RQLiteDataset Component
+- [v0.2] Minor Changes
+- [v0.1] Initial/First version
+
 ### Collaboration
 Please feel free to suggest additions/improvements to this library. If you have any proposals contact me through the rqlite slack channel, or start a discussion on the GitHub page.
 

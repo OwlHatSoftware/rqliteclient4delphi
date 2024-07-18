@@ -18,11 +18,7 @@ unit urqlite.net;
 interface
 
 uses
-  {$IFnDEF FPC}
-  System.Classes
-  {$ELSE}
-  Classes
-  {$ENDIF};
+  System.Classes;
 
 type
   IHttpClient = interface
@@ -38,12 +34,9 @@ type
 implementation
 
 uses
-  {$IFnDEF FPC}
   System.SysUtils,
-  {$ELSE}
-  SysUtils,
-  {$ENDIF}
-  IdHttp, IdURI;
+  IdHttp,
+  IdURI;
 
 type
   TIndyHttpClient = class(TInterfacedObject, IHttpClient)
@@ -74,29 +67,29 @@ function TIndyHttpClient.Get(const URI: string): string;
 var
   response: string;
 begin
-  Result := '{"results": []}';
+  result := '{"results": []}';
   response := FHTTPClient.Get(TIdURI.UrlEncode(URI));
   if response = '' then
     raise Exception.Create('No HTTP response!');
-  Result := response;
+  result := response;
 end;
 
 function TIndyHttpClient.Post(const URI: string; const AData: TStream): string;
 var
   response: string;
 begin
-  Result := '{"results": []}';
+  result := '{"results": []}';
   response := FHTTPClient.Post(TIdURI.UrlEncode(URI), AData);
   if response = '' then
     raise Exception.Create('No HTTP response!');
-  Result := response;
+  result := response;
 end;
 
 { THttpClientFactory }
 
 class function THttpClientFactory.CreateIndyInstance: IHttpClient;
 begin
-  Result := TIndyHttpClient.Create;
+  result := TIndyHttpClient.Create;
 end;
 
 end.

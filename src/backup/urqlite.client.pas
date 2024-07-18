@@ -384,6 +384,8 @@ function TRqliteClient.Execute(const QueryStr: string): boolean;
     Result := False;
     LJSONObject := nil;
     LURI := cExecuteURI;
+    if AsTransaction then
+      LURI := LURI + '&transaction';
     LJSONArr := TJSONArray.Create([QueryStr]);
     try
       SS := TStringStream.Create(LJSONArr.AsJSON);

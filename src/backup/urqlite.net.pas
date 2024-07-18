@@ -21,8 +21,9 @@ uses
   {$IFnDEF FPC}
   System.Classes
   {$ELSE}
-  Classes
-  {$ENDIF};
+Classes
+  {$ENDIF}
+  ;
 
 type
   IHttpClient = interface

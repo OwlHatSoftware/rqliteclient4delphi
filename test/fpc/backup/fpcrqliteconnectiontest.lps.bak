@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="fpcrqliteconnectiontest.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="21"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utest.rqlite.connection.pas"/>
+        <IsPartOfProject Value="True"/>
+        <TopLine Value="10"/>
+        <CursorPos X="25" Y="29"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="14"/>
+        <CursorPos X="22" Y="39"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\lazarus_projects\riskbase\src\model\uriskbase.model.conn.sqlite.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="26" Y="7"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <UnitName Value="SQLite3Conn"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="55"/>
+        <CursorPos X="32" Y="67"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\src\urqlite.client.pas"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="365"/>
+        <CursorPos Y="398"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\src\urqlite.net.pas"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="24"/>
+        <CursorPos X="3" Y="46"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utest.rqlite.integration.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="141"/>
+        <CursorPos X="29" Y="167"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqldb.pp"/>
+        <UnitName Value="SQLDB"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="169"/>
+        <CursorPos X="35" Y="185"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysql40conn.pas"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="12" Y="9"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysqlconn.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="593"/>
+        <CursorPos X="3" Y="522"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\base\db.pas"/>
+        <UnitName Value="DB"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1986"/>
+        <CursorPos X="36" Y="2001"/>
+        <UsageCount Value="10"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="1944"/>
+        <CursorPos X="36" Y="1960"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="26">
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="136" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="300" TopLine="278"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="361" TopLine="353"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="97" TopLine="75"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="122" TopLine="100"/>
+      </Position>
+      <Position>
+        <Filename Value="utest.rqlite.connection.pas"/>
+        <Caret Line="31" TopLine="10"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="141" TopLine="105"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="146" TopLine="110"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="129" TopLine="110"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="322" TopLine="300"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="146" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="160" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="375" TopLine="359"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="97" TopLine="75"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="122" TopLine="100"/>
+      </Position>
+      <Position>
+        <Filename Value="utest.rqlite.connection.pas"/>
+        <Caret Line="31" TopLine="10"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="141" TopLine="105"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="321" TopLine="299"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="146" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="129" TopLine="121"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="336" TopLine="314"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="146" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="13" Column="29"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="19" Column="18"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="20" Column="22" TopLine="10"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="26" Column="55" TopLine="11"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="29" Column="85" TopLine="10"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+  <Debugging>
+    <BreakPoints>
+      <Item>
+        <Kind Value="bpkSource"/>
+        <WatchScope Value="wpsLocal"/>
+        <WatchKind Value="wpkWrite"/>
+        <Source Value="utest.rqlite.connection.pas"/>
+        <Line Value="31"/>
+      </Item>
+    </BreakPoints>
+    <Watches>
+      <Item>
+        <Expression Value="AParams"/>
+      </Item>
+      <Item>
+        <Expression Value="atransaction"/>
+      </Item>
+    </Watches>
+  </Debugging>
+</CONFIG>

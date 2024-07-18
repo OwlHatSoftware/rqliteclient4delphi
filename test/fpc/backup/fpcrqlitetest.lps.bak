@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="fpcrqlitetest.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <WindowIndex Value="-1"/>
+        <TopLine Value="-1"/>
+        <CursorPos X="-1" Y="-1"/>
+        <UsageCount Value="36"/>
+      </Unit>
+      <Unit>
+        <Filename Value="utest.rqlite.integration.pas"/>
+        <IsPartOfProject Value="True"/>
+        <TopLine Value="145"/>
+        <CursorPos X="29" Y="167"/>
+        <UsageCount Value="36"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\src\urqlite.client.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="12"/>
+        <TopLine Value="118"/>
+        <CursorPos X="22" Y="21"/>
+        <UsageCount Value="36"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\src\urqlite.net.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos X="3" Y="47"/>
+        <UsageCount Value="36"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-json\src\fpjson.pp"/>
+        <EditorIndex Value="14"/>
+        <TopLine Value="18"/>
+        <CursorPos X="83" Y="33"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\rtl\inc\rttih.inc"/>
+        <EditorIndex Value="13"/>
+        <CursorPos X="51" Y="27"/>
+        <UsageCount Value="14"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="228"/>
+        <CursorPos X="2" Y="239"/>
+        <UsageCount Value="21"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\lazarus_projects\riskbase\src\model\uriskbase.model.conn.sqlite.pas"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="22"/>
+        <CursorPos X="25" Y="27"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <UnitName Value="SQLite3Conn"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="156"/>
+        <CursorPos X="2" Y="162"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqldb.pp"/>
+        <UnitName Value="SQLDB"/>
+        <EditorIndex Value="10"/>
+        <TopLine Value="216"/>
+        <CursorPos X="15" Y="228"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\base\dbconst.pas"/>
+        <UnitName Value="DBConst"/>
+        <EditorIndex Value="9"/>
+        <TopLine Value="3"/>
+        <CursorPos X="13" Y="17"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\sqlite\src\sqlite3.inc"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="1405"/>
+        <CursorPos X="10" Y="1165"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\postgres\pqconnection.pp"/>
+        <UnitName Value="PQConnection"/>
+        <EditorIndex Value="5"/>
+        <TopLine Value="34"/>
+        <CursorPos X="15" Y="103"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\base\sqltypes.pp"/>
+        <UnitName Value="SQLTypes"/>
+        <EditorIndex Value="11"/>
+        <CursorPos X="88" Y="16"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysql40conn.pas"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="7" Y="9"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysqlconn.inc"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="766"/>
+        <CursorPos X="3" Y="511"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="76" Column="25" TopLine="63"/>
+      </Position>
+      <Position>
+        <Filename Value="utest.rqlite.integration.pas"/>
+        <Caret Line="168" Column="5" TopLine="145"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="8" Column="26"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="33" Column="15" TopLine="103"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="8" Column="37"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="76" Column="35" TopLine="61"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="76" Column="29" TopLine="64"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="876" Column="28" TopLine="869"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="68" Column="14" TopLine="46"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="105" Column="146" TopLine="375"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="877" Column="13" TopLine="853"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="1108" Column="15" TopLine="1084"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="1132" Column="15" TopLine="1108"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="1226" Column="22" TopLine="1202"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="877" Column="13" TopLine="862"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="80" TopLine="67"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="887" Column="7" TopLine="862"/>
+      </Position>
+      <Position>
+        <Filename Value="..\..\src\urqlite.rqliteconnection.pas"/>
+        <Caret Line="57" Column="17" TopLine="43"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="110" Column="20" TopLine="97"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="87" Column="22" TopLine="80"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="588" Column="24" TopLine="576"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqldb.pp"/>
+        <Caret Line="79" Column="40" TopLine="64"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="584" Column="15" TopLine="576"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\sqlite\sqlite3conn.pp"/>
+        <Caret Line="162" Column="2" TopLine="156"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\postgres\pqconnection.pp"/>
+        <Caret Line="107" Column="19" TopLine="105"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\postgres\pqconnection.pp"/>
+        <Caret Line="614" Column="12" TopLine="592"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysql40conn.pas"/>
+        <Caret Line="9" Column="7"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysqlconn.inc"/>
+        <Caret Line="156" Column="28" TopLine="143"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysqlconn.inc"/>
+        <Caret Line="588" Column="15" TopLine="571"/>
+      </Position>
+      <Position>
+        <Filename Value="C:\lazarus\fpcsrc\packages\fcl-db\src\sqldb\mysql\mysqlconn.inc"/>
+        <Caret Line="149" Column="26" TopLine="135"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

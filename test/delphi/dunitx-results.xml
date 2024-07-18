@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<test-results name="C:\Users\JaccoUijlenhoet\Documents\GitHub\rqliteclient4delphi\test\delphi\rqlitetest.exe" total="4" errors="0" failures="0" ignored="0" inconclusive="0" not-run="0" skipped="0" invalid="0" date="2024-07-16" time="0.162">
+  <culture-info current-culture="en" current-uiculture="en" />
+  <test-suite type="Assembly" name="rqlitetest.exe" executed="true" result="Success" success="True" time="0.162" asserts="0">
+    <results>
+        <test-suite type="Namespace" name="utest" executed="true" result="Success" success="True" time="0.161" asserts="0" >
+          <results>
+              <test-suite type="Fixture" name="TRQLiteTest" executed="True" result="Success" success="True" time="0.161" >
+                <results>
+                  <test-case name="TestDropAndCreateTable" executed="True" result="Success" success="True" time="0.045" asserts="0" />
+                  <test-case name="TestGetColumnNames" executed="True" result="Success" success="True" time="0.029" asserts="0" />
+                  <test-case name="TestGetColumnTypes" executed="True" result="Success" success="True" time="0.026" asserts="0" />
+                  <test-case name="TestGetValues" executed="True" result="Success" success="True" time="0.026" asserts="0" />
+                </results>
+              </test-suite>
+          </results>
+        </test-suite>
+    </results>
+  </test-suite>
+</test-results>
