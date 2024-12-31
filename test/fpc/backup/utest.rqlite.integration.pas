@@ -31,6 +31,7 @@ type
     procedure TestGetColumnNames;
     procedure TestGetColumnTypes;
     procedure TestGetValues;
+    procedure TestReadiness;
   end;
 
 implementation
@@ -164,8 +165,8 @@ begin
   rqliteClient := TRqliteClientFactory.CreateInstance(
     THttpClientFactory.CreateIndyInstance);
   rqliteClient.Hostname := 'localhost';
-  rqliteClient.Port := 4005;
-  rqliteClient.Database := 'employees';
+  rqliteClient.Port := 4001;
+  //rqliteClient.Database := 'employees';
 end;
 
 procedure TFPCRQLiteTest.TearDown;
@@ -265,6 +266,11 @@ begin
   AssertEquals(cBlobVal, rv14);
   BlobVal := StringOf(Base64ToBytes(rv14));
   AssertEquals(cStory, BlobVal);
+end;
+
+procedure TFPCRQLiteTest.TestReadiness;
+begin
+  AssertEquals(True, rqliteClient.GetReadyStatus);
 end;
 
 initialization

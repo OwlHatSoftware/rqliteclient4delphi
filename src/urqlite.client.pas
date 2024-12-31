@@ -18,7 +18,7 @@ uses
   {$IFnDEF FPC}
   System.SysUtils, System.Classes, System.JSON,
   {$ELSE}
-  SysUtils, Classes, fpjson,
+  SysUtils, Classes, Variants, TypInfo, fpjson, jsonparser,
   {$ENDIF}
   Generics.Collections,
   urqlite.net;
@@ -33,10 +33,17 @@ type
     property Value[idx: integer]: string read GetColValue;
   end;
 
+  { IRqliteClient }
+
   IRqliteClient = interface
     ['{002E26F4-55AB-4FFB-8324-99413E5F91AA}']
+    procedure ClearAll;
+    function GetPathToRQLiteCLI: string;
+    function GetPathToRQLited: string;
     procedure SetDatabase(const Value: string);
     procedure SetHostname(const Value: string);
+    procedure SetPathToRQLiteCLI(AValue: string);
+    procedure SetPathToRQLited(AValue: string);
     procedure SetPort(const Value: integer);
     function GetDatabase: string;
     function GetHostname: string;
@@ -45,13 +52,27 @@ type
     function GetColumnTypes: TStringList;
     function GetRowCount: integer;
     function GetRow(idx: integer): TRow;
+    function Execute(const QueryStr: TStringList; out RawJSONResult: TJSONObject;
+      AsTransaction: boolean = False): boolean; overload;
     function Execute(const QueryStr: TStringList;
       AsTransaction: boolean = False): boolean; overload;
+    function Execute(const QueryStr: string; out RawJSONResult: TJSONObject): boolean;
+      overload;
     function Execute(const QueryStr: string): boolean; overload;
-    function Query(const QueryStr: TStringList): boolean;
+    function Query(const QueryStr: TStringList;
+      out RawJSONResult: TJSONObject): boolean; overload;
+    function Query(const QueryStr: TStringList): boolean; overload;
+    //rqlite nodes serve a “ready” status at /readyz.
+    //The endpoint will return HTTP 200 OK if the node is ready to respond
+    //to database requests and cluster management operations.
+    function GetReadyStatus: boolean;
+    function ExecuteCommand(const ACommand: string): boolean;
+    procedure RemoveNode(ANodeId: integer);
     property Hostname: string read GetHostname write SetHostname;
     property Port: integer read GetPort write SetPort;
     property Database: string read GetDatabase write SetDatabase;
+    property PathToRQLiteCLI: string read GetPathToRQLiteCLI write SetPathToRQLiteCLI;
+    property PathToRQLited: string read GetPathToRQLited write SetPathToRQLited;
   end;
 
   TRqliteClientFactory = class
@@ -67,10 +88,13 @@ implementation
 uses
   {$IFnDEF FPC}
   {$ELSE}
+  Process,
   {$ENDIF}
   IdCoder, IdCoderMIME;
 
 const
+  cStatusURI = 'http://%s:%d/readyz?noleader';
+  cRemoveNode = 'http://%s:%d/remove';
   cQueryURI = 'http://%s:%d/db/query?pretty&timings&q=%s';
   cExecuteURI = 'http://%s:%d/db/execute?pretty&timings';
 
@@ -78,15 +102,19 @@ type
 
   { TJSONConvert }
 
-  TJSONConvert<T> = class
+  TJSONConvert = class
     class function TryGetValueFromJSONArray(const AName: string;
-      JSONArr: TJSONArray; out Val: T): boolean; static;
+      JSONArr: TJSONArray; out Val: variant): boolean; static;
   end;
+
+
 
   { TRqliteClient }
 
   TRqliteClient = class(TInterfacedObject, IRqliteClient)
   private
+    FPathToRQLiteCLI: string;
+    FPathToRQLited: string;
     FColumns: TStringList;
     FTypes: TStringList;
     FValues: TList<TRow>;
@@ -94,28 +122,44 @@ type
     FPort: integer;
     FDatabase: string;
     FHostname: string;
+    function GetPathToRQLiteCLI: string;
+    function GetPathToRQLited: string;
     procedure SetDatabase(const Value: string);
     procedure SetHostname(const Value: string);
+    procedure SetPathToRQLiteCLI(AValue: string);
+    procedure SetPathToRQLited(AValue: string);
     procedure SetPort(const Value: integer);
     function GetDatabase: string;
     function GetHostname: string;
     function GetPort: integer;
     function CreateJSONArray(AStrings: TStrings): TJSONArray;
   public
+    procedure ClearAll;
     function GetColumnNames: TStringList;
     function GetColumnTypes: TStringList;
     function GetRowCount: integer;
     function GetRow(idx: integer): TRow;
+    function GetReadyStatus: boolean;
+    function Execute(const QueryStr: TStringList; out RawJSONResult: TJSONObject;
+      AsTransaction: boolean = False): boolean; overload;
     function Execute(const QueryStr: TStringList;
       AsTransaction: boolean = False): boolean; overload;
+    function Execute(const QueryStr: string; out RawJSONResult: TJSONObject): boolean;
+      overload;
     function Execute(const QueryStr: string): boolean; overload;
-    function Query(const QueryStr: TStringList): boolean;
+    function Query(const QueryStr: TStringList;
+      out RawJSONResult: TJSONObject): boolean; overload;
+    function Query(const QueryStr: TStringList): boolean; overload;
+    function ExecuteCommand(const ACommand: string): boolean;
+    procedure RemoveNode(ANodeId: integer);
     constructor Create(const AHttpClient: IHttpClient);
     destructor Destroy; override;
   published
     property Hostname: string read GetHostname write SetHostname;
     property Port: integer read GetPort write SetPort;
     property Database: string read GetDatabase write SetDatabase;
+    property PathToRQLiteCLI: string read GetPathToRQLiteCLI write SetPathToRQLiteCLI;
+    property PathToRQLited: string read GetPathToRQLited write SetPathToRQLited;
   end;
 
 function BytesToHexString(ByteData: TBytes): string;
@@ -152,8 +196,8 @@ end;
 
 { TJSONConvert }
 
-class function TJSONConvert<T>.TryGetValueFromJSONArray(const AName: string;
-  JSONArr: TJSONArray; out Val: T): boolean;
+class function TJSONConvert.TryGetValueFromJSONArray(const AName: string;
+  JSONArr: TJSONArray; out Val: variant): boolean;
   {$IFnDEF FPC}
 var
   LArrElement, FoundVal: TJSONValue;
@@ -164,7 +208,7 @@ begin
     FoundVal := LArrElement.FindValue(AName);
     if FoundVal <> nil then
     begin
-      Val := LArrElement.GetValue<T>(AName);
+      Val := LArrElement.GetValue<variant>(AName);
       Result := True;
       break;
     end;
@@ -174,79 +218,29 @@ end;
 var
   LArrElement: TJSONEnum;
   FoundVal: TJSONObject;
-  LType: TTypeKind;
   JSONData: TJSONData;
+  object_type: String;
 begin
   Result := False;
-  LType := GetTypeKind(T);
+  //LType := GetTypeKind(T);
   for LArrElement in JSONArr do
   begin
     FoundVal := TJSONObject(LArrElement.Value);
     if FoundVal.Find(AName, JSONData) then
     begin
-      Case LType of
-        tkInteger, tkInt64:
-          begin
-            Integer(Val):= JSONData.AsInteger;
-            result := True;
-          end;
-      //tkChar, tkWChar, tkUChar:
-      //  begin
-      //    Val := FoundVal.AsString;
-      //  end;
-      //tkEnumeration:
-      //  begin
-      //    Val := FoundVal.AsBoolean;
-      //  end;
-      //tkFloat:
-      //  begin
-      //    //Double(Val) := JSONData.AsFloat; //GIVES ILLEGAL TYPE CONVERSION!!
-      //  end;
-      //tkSet:
-      //  begin
-      //    //not supported
-      //  end;
-      //tkMethod:
-      //  begin
-      //    //not supported
-      //  end;
-        tkSString, tkLString, tkAString, tkWString, tkUString:
-          begin
-            String(Val) := JSONData.AsString;
-            result := True;
-          end;
-      //tkVariant:
-      //  begin
-      //    Val := FoundVal.AsString;
-      //  end;
-      //tkBool:
-      //  begin
-      //    //Boolean(Val) := JSONData.AsBoolean; //GIVES ILLEGAL TYPE CONVERSION!!
-      //  end;
-      //tkQWord:
-      //  begin
-      //    //QWord(Val) := JSONData.AsQWord; GIVES ILLEGAL TYPE CONVERSION!!
-      //  end;
-      //tkUnknown,
-      //tkArray,
-      //tkRecord,
-      //tkInterface,
-      tkClass,tkObject:
-        begin
-          TJSONArray(Val) := TJSONArray(JSONData);
-          result := True;
-        end;
-      //tkDynArray,
-      //tkInterfaceRaw,
-      //tkProcVar,
-      //tkHelper,
-      //tkFile,
-      //tkClassRef,
-      //tkPointer:
-        else
-          //not supported
-          raise Exception.Create('Type not supported!');
-        end;
+      object_type := GetEnumName(TypeInfo(TJSONtype), Ord(JSONData.JSONType));
+      case JSONData.JSONType of
+        jtNumber: Val := JSONData.AsInteger;
+        jtString: Val := JSONData.AsString;
+        jtBoolean: Val := JSONData.AsBoolean;
+        jtNull: Val := null;
+        jtArray: Val := TJSONArray(JSONData).AsJSON;
+        jtObject: Val := TJSONObject(JSONData).AsJSON;
+      else
+        //not supported
+        raise Exception.Create(Format('Type %s not supported!',[object_type]));
+      end;
+      result := not VarIsEmpty(Val);
       if result then
         break;
     end;
@@ -286,6 +280,13 @@ begin
       Result.Add(LStr);
     Inc(i);
   end;
+end;
+
+procedure TRqliteClient.ClearAll;
+begin
+  FValues.Clear;
+  FTypes.Clear;
+  FColumns.Clear;
 end;
 
 destructor TRqliteClient.Destroy;
@@ -335,10 +336,11 @@ begin
   end;
 end;
 {$ELSE}
-function TRqliteClient.Execute(const QueryStr: TStringList;
+function TRqliteClient.Execute(const QueryStr: TStringList; out RawJSONResult: TJSONObject;
   AsTransaction: boolean = False): boolean;
 var
   s, LURI: string;
+  v: variant;
   SS: TStringStream;
   LJSONObject: TJSONObject;
   LJSONArr, LJSONArrResults, LJSONArrDef: TJSONArray;
@@ -355,11 +357,12 @@ begin
       LJSONObject := TJSONObject(GetJSON(FHttpClient.Post(Format(LURI, [FHostname, FPort]), SS)));
       try
         Result := LJSONObject <> nil;
+        RawJSONResult := LJSONObject;
         s := LJSONObject.AsJSON;
         LJSONArrDef:=TJSONArray.Create;
         LJSONArrResults := TJSONArray(LJSONObject.Get('results', LJSONArrDef));
-        if TJSONConvert<string>.TryGetValueFromJSONArray('error', LJSONArrResults, s) then
-          raise Exception.Create(Format('Error: %s', [s]));
+        if TJSONConvert.TryGetValueFromJSONArray('error', LJSONArrResults, v) then
+          raise Exception.Create(Format('Error: %s', [v]));
       finally
         LJSONObject.Free;
       end;
@@ -370,13 +373,25 @@ begin
     LJSONArr.Free;
   end;
 end;
+
+function TRqliteClient.Execute(const QueryStr: TStringList;
+  AsTransaction: boolean): boolean;
+var
+  LRawJSON: TJSONObject;
+begin
+  result := Execute(QueryStr, LRawJSON, AsTransaction);
+end;
+
 {$ENDIF}
 
 {$IFnDEF FPC}
+//TODO: Delphi implementation
 {$ELSE}
-function TRqliteClient.Execute(const QueryStr: string): boolean;
+function TRqliteClient.Execute(const QueryStr: string; out
+  RawJSONResult: TJSONObject): boolean;
   var
     s, LURI: string;
+    v: variant;
     SS: TStringStream;
     LJSONObject: TJSONObject;
     LJSONArr, LJSONArrResults, LJSONArrDef: TJSONArray;
@@ -391,11 +406,12 @@ function TRqliteClient.Execute(const QueryStr: string): boolean;
         LJSONObject := TJSONObject(GetJSON(FHttpClient.Post(Format(LURI, [FHostname, FPort]), SS)));
         try
           Result := LJSONObject <> nil;
+          RawJSONResult := LJSONObject;
           s := LJSONObject.AsJSON;
           LJSONArrDef:=TJSONArray.Create;
           LJSONArrResults := TJSONArray(LJSONObject.Get('results', LJSONArrDef));
-          if TJSONConvert<string>.TryGetValueFromJSONArray('error', LJSONArrResults, s) then
-            raise Exception.Create(Format('Error: %s', [s]));
+          if TJSONConvert.TryGetValueFromJSONArray('error', LJSONArrResults, v) then
+            raise Exception.Create(Format('Error: %s', [v]));
         finally
           LJSONObject.Free;
         end;
@@ -406,6 +422,14 @@ function TRqliteClient.Execute(const QueryStr: string): boolean;
       LJSONArr.Free;
     end;
   end;
+
+function TRqliteClient.Execute(const QueryStr: string): boolean;
+var
+  LRawJSON: TJSONObject;
+begin
+  result := Execute(QueryStr, LRawJSON);
+end;
+
 {$ENDIF}
 
 function TRqliteClient.GetColumnNames: TStringList;
@@ -436,6 +460,14 @@ end;
 function TRqliteClient.GetRow(idx: integer): TRow;
 begin
   Result := FValues[idx];
+end;
+
+function TRqliteClient.GetReadyStatus: boolean;
+var
+  LResponse: string;
+begin
+  LResponse := FHttpClient.Get(Format(cStatusURI, [FHostname, FPort]));
+  Result := LResponse = '[+]node ok';
 end;
 
 function TRqliteClient.GetRowCount: integer;
@@ -500,10 +532,11 @@ begin
   end;
 end;
 {$ELSE}
-function TRqliteClient.Query(const QueryStr: TStringList): boolean;
+function TRqliteClient.Query(const QueryStr: TStringList; out RawJSONResult: TJSONObject): boolean;
 var
   i: integer;
   LURI, s: string;
+  v: variant;
   LArrOfStr: array of string;
   LJSONObject: TJSONObject;
   LJSONArr: TJSONArray;
@@ -515,28 +548,32 @@ begin
   FColumns.Clear;
   FTypes.Clear;
   try
-   s := '';
+    s := '';
     LURI := Format(cQueryURI, [FHostname, FPort, QueryStr.Text]);
     LJSONObject := TJSONObject(GetJSON(FHttpClient.Get(LURI)));
     Result := LJSONObject <> nil;
+    RawJSONResult := LJSONObject;
     LJSONArr := LJSONObject.Get('results', TJSONArray.Create) as TJSONArray;
-    if TJSONConvert<string>.TryGetValueFromJSONArray('Error', LJSONArr, s) then
-      raise Exception.Create(Format('Error: %s', [s]));
+    if TJSONConvert.TryGetValueFromJSONArray('Error', LJSONArr, v) then
+      raise Exception.Create(Format('Error: %s', [v]));
 
-    if TJSONConvert<TJSONArray>.TryGetValueFromJSONArray('columns', LJSONArr, LJSONColumnsArr) then
+    if TJSONConvert.TryGetValueFromJSONArray('columns', LJSONArr, v) then
     begin
+      LJSONColumnsArr := TJSONArray(GetJSON(v));
       for LCol in LJSONColumnsArr do
         FColumns.Add(LCol.Value.AsString);
     end;
 
-    if TJSONConvert<TJSONArray>.TryGetValueFromJSONArray('types', LJSONArr, LJSONTypesArr) then
+    if TJSONConvert.TryGetValueFromJSONArray('types', LJSONArr, v) then
     begin
+      LJSONTypesArr := TJSONArray(GetJSON(v));
       for LType in LJSONTypesArr do
         FTypes.Add(LType.Value.AsString);
     end;
 
-    if TJSONConvert<TJSONArray>.TryGetValueFromJSONArray('values', LJSONArr, LJSONValuesArr) then
+    if TJSONConvert.TryGetValueFromJSONArray('values', LJSONArr, v) then
     begin
+      LJSONValuesArr := TJSONArray(GetJSON(v));
       for LVal in LJSONValuesArr do
       begin
         i := 0;
@@ -555,7 +592,88 @@ begin
   end;
 end;
 
+function TRqliteClient.Query(const QueryStr: TStringList): boolean;
+var
+  LRawJSON: TJSONObject;
+begin
+  result := Query(QueryStr, LRawJSON);
+end;
+
 {$ENDIF}
+
+function TRqliteClient.ExecuteCommand(const ACommand: string): boolean;
+var
+  FirstProcess, SecondProcess: TProcess;
+  Buffer: array[0..127] of char;
+  ReadCount: integer;
+  ReadSize: integer;
+begin
+  Result := False;
+  FirstProcess := TProcess.Create(nil);
+  //SecondProcess := TProcess.Create(nil);
+  try
+    {$IFDEF WINDOWS}
+      FirstProcess.Executable := Format('%s\rqlite.exe',[FPathToRQLiteCLI]);
+      //SecondProcess.Executable := ACommand;
+      //SecondProcess.Parameters.Add(ACommand);
+    {$ENDIF}
+    {$IFDEF UNIX}
+      FirstProcess.Executable := 'bash';
+    {$ENDIF}
+    FirstProcess.Options := [poUsePipes];
+    //SecondProcess.Options := [poUsePipes,poStderrToOutPut];
+    FirstProcess.Execute;
+    //SecondProcess.Execute;
+    while FirstProcess.Running or (FirstProcess.Output.NumBytesAvailable > 0) do
+    begin
+      if FirstProcess.Output.NumBytesAvailable > 0 then
+      begin
+        // make sure that we don't read more data than we have allocated
+        // in the buffer
+        //ReadSize := FirstProcess.Output.NumBytesAvailable;
+        //if ReadSize > SizeOf(Buffer) then
+        //   ReadSize := SizeOf(Buffer);
+        // now read the output into the buffer
+        //ReadCount := FirstProcess.Output.Read(Buffer[0], ReadSize);
+        // and write the buffer to the second process
+        FirstProcess.Input.WriteAnsiString(ACommand + #10#13);
+        Break;
+      end;
+    end;
+    // Close the input on the SecondProcess
+    // so it finishes processing it's data
+    //SecondProcess.CloseInput;
+    Result := True;
+  finally
+    //SecondProcess.Free;
+    FirstProcess.Free;
+  end;
+end;
+
+
+procedure TRqliteClient.RemoveNode(ANodeId: integer);
+var
+  s: ansistring;
+  SS: TStringStream;
+begin
+  SS := TStringStream.Create(Format('{"id": "%d"}', [ANodeId]));
+  try
+    SS.Position := 0;
+    FHttpClient.Delete(Format(cRemoveNode, [Hostname, Port]), SS);
+  finally
+    SS.Free;
+  end;
+end;
+
+function TRqliteClient.GetPathToRQLiteCLI: string;
+begin
+  Result := FPathToRQLiteCLI;
+end;
+
+function TRqliteClient.GetPathToRQLited: string;
+begin
+  Result := FPathToRQLited;
+end;
 
 procedure TRqliteClient.SetDatabase(const Value: string);
 begin
@@ -565,6 +683,17 @@ end;
 procedure TRqliteClient.SetHostname(const Value: string);
 begin
   FHostname := Value;
+end;
+
+procedure TRqliteClient.SetPathToRQLiteCLI(AValue: string);
+begin
+  FPathToRQLiteCLI := AValue;
+end;
+
+procedure TRqliteClient.SetPathToRQLited(AValue: string);
+begin
+  if FPathToRQLited = AValue then Exit;
+  FPathToRQLited := AValue;
 end;
 
 procedure TRqliteClient.SetPort(const Value: integer);

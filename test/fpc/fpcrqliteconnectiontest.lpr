@@ -3,14 +3,24 @@ program fpcrqliteconnectiontest;
 {$mode objfpc}{$H+}
 
 uses
-  Interfaces, Forms, indylaz, GuiTestRunner, utest.rqlite.connection,
-  urqlite.rqliteconnection;
+  {$ifdef unix}
+  cthreads,
+  cmem, // the c memory manager is on some systems much faster for multi-threading
+  {$endif}
+  Interfaces,
+  Forms,
+  indylaz,
+  GuiTestRunner,
+  urqlite.rqliteconnection,
+  urqlite.rqlitedataset,
+  urqlite.monitor,
+  utest.rqlite.monitor,
+  utest.rqlite.connection;
 
-{$R *.res}
+  {$R *.res}
 
 begin
   Application.Initialize;
   Application.CreateForm(TGuiTestRunner, TestRunner);
   Application.Run;
 end.
-

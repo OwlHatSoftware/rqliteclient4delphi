@@ -9,6 +9,8 @@ uses
 
 type
 
+  { TTestRQLiteConnection }
+
   TTestRQLiteConnection = class(TTestCase)
   private
     FRQliteConnection: TRQLiteConnection;
@@ -19,6 +21,7 @@ type
     procedure TearDown; override;
   published
     procedure TestConnection;
+    procedure TestNodeFailure;
   end;
 
 implementation
@@ -26,27 +29,28 @@ implementation
 procedure TTestRQLiteConnection.TestConnection;
 begin
   FRQliteConnection.Open;
+  // Wait for monitoring thread to start
+  Sleep(6000);
+end;
 
-  FSQLQuery.SQL.Add('select * from employee');
-  FSQLQuery.Open;
+procedure TTestRQLiteConnection.TestNodeFailure;
+begin
+  //FRQliteConnection.Open;
+  //FRQliteConnection.RemoveNode(2);
 end;
 
 procedure TTestRQLiteConnection.SetUp;
 begin
+  //Set the Connection component
   FRQliteConnection := TRQLiteConnection.Create(nil);
-  FRQliteConnection.DatabaseName := 'MyDB';
+  FRQliteConnection.Database := 'MyDB';
   FRQliteConnection.HostName := 'localhost';
-  FRQliteConnection.Port := 4005;
-  FSQLQuery := TSQLQuery.Create(nil);
-  FSQLTransaction := TSQLTransaction.Create(nil);
-  FSQLQuery.DataBase := FRQliteConnection;
-  FSQLQuery.Transaction := FSQLTransaction;
+  FRQliteConnection.Port := 4001;
+  FRQliteConnection.PathToRQLiteCLI:='C:\Users\JaccoUijlenhoet\Documents\rqlite';
 end;
 
 procedure TTestRQLiteConnection.TearDown;
 begin
-  FSQLTransaction.Free;
-  FSQLQuery.Free;
   FRQliteConnection.Free;
 end;
 
